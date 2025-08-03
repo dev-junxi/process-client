@@ -143,6 +143,7 @@ public class DefaultProcessClient implements ProcessClient {
             return DefaultProcessorChain.builder()
                     .pushAll(this.processors)
                     .logLevel(this.logLevel)
+                    .processorContext(this.processorContext)
                     .chainId(chainId == null ? String.valueOf(System.currentTimeMillis()) : chainId)
                     .build();
 

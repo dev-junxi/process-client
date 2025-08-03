@@ -2,6 +2,7 @@ package com.susu.processclient;
 
 
 import cn.hutool.core.date.DateUtil;
+import com.alibaba.fastjson2.JSON;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.Ordered;
@@ -25,7 +26,7 @@ public interface LogProcessor extends BaseProcessor {
             return chain.nextCall(request);
         } catch (Exception e) {
             levels.add(LogLevel.DEBUG);
-            ProcessSnapshot exceptionSnapshot = buildExceptionSnapshot(request.getCurrentSnapshot(), e);
+            ProcessSnapshot exceptionSnapshot = buildExceptionSnapshot(request, e);
             request.getSnapshots().add(exceptionSnapshot);
             String formatted = "chainId:%s 发生异常".formatted(chain.getChainId());
             logger.error(formatted, e);
@@ -45,14 +46,15 @@ public interface LogProcessor extends BaseProcessor {
     }
 
 
-    default ProcessSnapshot buildExceptionSnapshot(ProcessSnapshot processSnapshot, Exception e) {
+    default ProcessSnapshot buildExceptionSnapshot(ProcessClientParam request, Exception e) {
+        ProcessSnapshot processSnapshot = request.getCurrentSnapshot();
         return ProcessSnapshot.builder()
                 .chainId(processSnapshot.getChainId())
                 .stepIndex(processSnapshot.getStepIndex())
                 .hostMethod(processSnapshot.getHostMethod())
                 .stepName(processSnapshot.getStepName())
                 .stepParam(processSnapshot.getStepParam())
-                .stepResult(processSnapshot.getStepResult())
+                .stepResult(StringUtils.truncateTo64KConservative(JSON.toJSONString(request.getResult())))
                 .stepException(e.getClass().getSimpleName())
                 .stepExceptionMessage(e.getMessage())
                 .stepExceptionStackTrace(StringUtils.truncateTo64KConservative(getStackTrace(e)))

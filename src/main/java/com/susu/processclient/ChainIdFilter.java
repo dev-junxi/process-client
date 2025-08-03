@@ -16,23 +16,16 @@ public class ChainIdFilter implements Filter {
             HttpServletRequest httpServletRequest = (HttpServletRequest) request;
             String preChainId = httpServletRequest.getHeader("X-PROCESS-CHAIN-ID");
             String preChainIndex = httpServletRequest.getHeader("X-PROCESS-CHAIN-INDEX");
-            if (StringUtils.isNotBlank(preChainId)) {
-                ChainIdHolder.setChainId(preChainId);
-            } else {
-                ChainIdHolder.setChainId(UUID.randomUUID().toString());
-            }
-
+            String chainId = StringUtils.isBlank(preChainId) ? UUID.randomUUID().toString() : preChainId;
+            ChainIdHolder.setChainId(chainId);
             if (StringUtils.isNotBlank(preChainIndex) && preChainIndex.matches("\\d+")) {
                 ChainIndexHolder.setChainIndex(Integer.parseInt(preChainIndex));
             }
+            if (response instanceof HttpServletResponse httpServletResponse) {
+                httpServletResponse.setHeader("X-PROCESS-CHAIN-ID", chainId);
+            }
             chain.doFilter(request, response);
         } finally {
-            if (response instanceof HttpServletResponse httpServletResponse) {
-                String chainId = ChainIdHolder.getChainId();
-                if (chainId != null) {
-                    httpServletResponse.setHeader("X-PROCESS-CHAIN-ID", chainId);
-                }
-            }
             ChainIdHolder.clear();
             ChainIndexHolder.clear();
         }

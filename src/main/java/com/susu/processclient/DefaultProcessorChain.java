@@ -87,7 +87,7 @@ public class DefaultProcessorChain implements ProcessorChain {
     public static class Builder {
         private final Deque<BaseProcessor> callProcessors;
 
-        private final Map<String, Object> processorContext = new HashMap<>();
+        private Map<String, Object> processorContext = new HashMap<>();
 
         private String logLevel;
 
@@ -133,8 +133,8 @@ public class DefaultProcessorChain implements ProcessorChain {
             return this;
         }
 
-        public Builder processorContext(String key, Object value) {
-            this.processorContext.put(key, value);
+        public Builder processorContext(Map<String, Object> processorContext) {
+            this.processorContext = processorContext;
             return this;
         }
 
