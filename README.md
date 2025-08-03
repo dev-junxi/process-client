@@ -1,7 +1,7 @@
 # process-client
 **ProcessClient** 是一个轻量级 Java 组件，旨在通过链式编程方式提高业务代码流程化开发的可维护性，定义统一开发范式便于团队协同工作，并内置节点执行快照功能，帮助开发者清晰定义主流程、便捷高效追踪线上问题。
 
-### 开发中...
+### 目前作者本人已投入生产使用，让ProcessClient更加契合业务开发，以轻量、方便快捷、易于BUG追踪为目标不断迭代改进中...
 
  ### ✨ 特性
 
@@ -45,6 +45,7 @@ public FundAccountResult getFundAccount(FundAccountProcessParam param) {
   
 ### 📔快照记录
 - 我们能通过process_snapshot追踪ProcessClient执行结果
+- 快照定期自动清除策略，避免数据不断膨胀
 - 通过 chain_id 可进行分布式追踪，目前仅支持 Feign 调用自动传递 chain_id ；通过向 Context 中 设置 chainId 和 chainIndex 可进行手动传递
 - 每一次HTTP请求的响应头中我们可以通过 X-PROCESS-CHAIN-ID 追踪 chain_id，进行BUG快速排查
 - 扩展
