@@ -45,7 +45,7 @@ public FundAccountResult getFundAccount(FundAccountProcessParam param) {
   
 ### 📔快照记录
 - 我们能通过process_snapshot追踪ProcessClient执行结果
-- 通过 chain_id 可进行分布式追踪，目前仅支持 Feign 调用自动传递 chain_id ；通过向 Context 中 setter chainId 和 chainIndex 可进行手动传递
+- 通过 chain_id 可进行分布式追踪，目前仅支持 Feign 调用自动传递 chain_id ；通过向 Context 中 设置 chainId 和 chainIndex 可进行手动传递
 - 每一次HTTP请求的响应头中我们可以通过 X-PROCESS-CHAIN-ID 追踪 chain_id，进行BUG快速排查
 - 扩展
   - 通过实现 LogProcessor 接口 您能定制快照存储方法，目前组件仅支持 MYSQL
